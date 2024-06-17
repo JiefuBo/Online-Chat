@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Room</title>
+    <!--    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">-->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: url('golden-gate-bridge-scaled.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .container { /*这里是聊天框的设置区*/
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            width: 1400px;
+            height: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1)
+        }
+
+        header { /*这里是表头设置区*/
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.5);
+            padding: 10px;
+
+            .left-section {
+                display: flex;
+                align-items: center;
+            }
+
+            .page-title {
+                font-size: 24px;
+                font-weight: bold;
+                background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+                -webkit-background-clip: text;
+                color: transparent;
+                background-size: 200% auto;
+            }
+
+            .logout-button {
+                width: 150px;
+                height: 50px;
+                border: none;
+                background: rgba(255, 255, 255, 50%);
+                cursor: pointer;
+                font-size: 25px;
+                font-weight: bold;
+                border-radius: 5px;
+                padding: 5px 10px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+
+
+    </style>
+</head>
+
+<header>
+    <div class="left-section">
+        <h1 class="page-title">Online Chating</h1>
+    </div>
+    <!--    <button class="settings-button">Settings</button>-->
+    <form action="{{ url_for('main.logout') }}" method="POST">
+        <button type="submit" class="logout-button">Logout</button>
+    </form>
+</header>
+
+<body>
+
+<div class="container">
+<!--    <h2 class="h2">Chat Room</h2>-->
+    <div id="messages">
+        {% for message in messages %}
+        <p>{{ message.user.username }}: {{ message.content }}</p>
+        {% endfor %}
+    </div>
+    <input id="message" type="text">
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        socket.on('message', function (data) {
+            $('#messages').append('<p>' + data.user + ': ' + data.msg + '</p>');
+        });
+
+        function sendMessage() {
+            var msg = $('#message').val();
+            socket.emit('message', {msg: msg});
+            $('#message').val('');
+        }
+
+        window.sendMessage = sendMessage;
+
+        $('#message').keypress(function (event) {
+            if (event.which === 13) { // Enter key is pressed
+                sendMessage();
+                event.preventDefault(); // Prevent the default action of the Enter key
+            }
+        });
+    });
+</script>
+
+<script>
+    const textElement = document.querySelector('.rainbow-text');
+    let gradientPosition = 0;
+
+    function shiftGradient() {
+        gradientPosition = (gradientPosition + 1) % 100;
+        textElement.style.backgroundPosition = gradientPosition + '% 0%';
+    }
+
+    setInterval(shiftGradient, 50);
+</script>
+
+</body>
+
+</html>

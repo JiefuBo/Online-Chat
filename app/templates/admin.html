@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <title>Admin Panel</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: url('golden-gate-bridge-scaled.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+
+
+        header { /*这里是表头设置区*/
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.5);
+            padding: 10px;
+
+            .left-section {
+                display: flex;
+                align-items: center;
+            }
+
+            .page-title {
+                font-size: 24px;
+                font-weight: bold;
+            }
+
+            .logout-button {
+                width: 150px;
+                height: 50px;
+                border: none;
+                background: rgba(255, 255, 255, 50%);
+                cursor: pointer;
+                font-size: 25px;
+                font-weight: bold;
+                border-radius: 5px;
+                padding: 5px 10px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+    </style>
+</head>
+
+
+<header>
+    <div class="left-section">
+        <h1 class="page-title">Admin Panel</h1>
+    </div>
+    <form action="{{ url_for('main.logout') }}" method="POST">
+        <button type="submit" class="logout-button">Logout</button>
+    </form>
+</header>
+
+
+<body>
+<h2>Admin Panel</h2>
+<!-- 管理员功能的HTML -->
+</body>
+
+
+</html>

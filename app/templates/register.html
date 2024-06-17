@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <!--    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">-->
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            font-weight: 300;
+            font-size: 15px;
+            line-height: 1.7;
+            color: #c4c3ca;
+            background-color: #1f2029;
+            overflow-x: hidden;
+            background-image: url("golden-gate-bridge-scaled.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h2 {
+            font-size: 20px;
+            color: red;
+        }
+
+        .container {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            width: 300px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1)
+            /*text-align: center;*/
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .input {
+            display: grid;
+            grid-template-columns: 1fr;
+            justify-items: center; /* 水平居中 */
+            row-gap: 20px; /* 设置行间隙为100px */
+            height: 10vh; /* 设置容器高度为视口高度，以便于垂直居中 */
+        }
+
+        input[type="text"], input[type="password"], input[type="verify"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            color: #17a2b8;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        p {
+            color: red;
+
+        }
+    </style>
+
+</head>
+
+
+<body>
+<div class="container">
+    <h2>注册成为新用户</h2>
+    <form method="POST" class="input">
+        <input type="text" name="username" placeholder="用户名" required>
+        <input type="password" name="password" placeholder="密码" required>
+        <input type="text" name="verification_code" placeholder="邀请码" required>
+        <button type="submit">注册</button>
+    </form>
+    <br>
+    <p>已经有账户了？ <a href="{{ url_for('main.login') }}">-->点击这里去登陆<--</a></p>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+</div>
+</body>
+
+</html>
