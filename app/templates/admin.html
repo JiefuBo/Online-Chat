@@ -2,17 +2,32 @@
 <html lang="zh">
 
 <head>
-    <title>Admin Panel</title>
+    <title>超级管理员面板</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <style>
         body {
             margin: 0;
             padding: 0;
             height: 100%;
-            background: url('golden-gate-bridge-scaled.jpg') no-repeat center center fixed;
+            background-image: url('./golden-gate-bridge-scaled.jpg');
             background-size: cover;
         }
 
+        .ver-code {
+            width: 200px;
+            padding: 10px;
+        }
+
+        .start-time {
+            width: 200px;
+            padding: 10px;
+        }
+
+        .exp-time {
+            width: 200px;
+            padding: 10px;
+        }
 
 
         header { /*这里是表头设置区*/
@@ -21,29 +36,68 @@
             align-items: center;
             background-color: rgba(255, 255, 255, 0.5);
             padding: 10px;
+        }
 
-            .left-section {
-                display: flex;
-                align-items: center;
-            }
+        .left-section {
+            display: flex;
+            align-items: center;
+        }
 
-            .page-title {
-                font-size: 24px;
-                font-weight: bold;
-            }
+        .page-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
 
-            .logout-button {
-                width: 150px;
-                height: 50px;
-                border: none;
-                background: rgba(255, 255, 255, 50%);
-                cursor: pointer;
-                font-size: 25px;
-                font-weight: bold;
-                border-radius: 5px;
-                padding: 5px 10px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            }
+        .logout-button {
+            width: 150px;
+            height: 50px;
+            border: none;
+            background: rgba(255, 255, 255, 50%);
+            cursor: pointer;
+            font-size: 25px;
+            font-weight: bold;
+            border-radius: 5px;
+            padding: 5px 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            padding: 200px;
+            /*background: rgba(255, 255, 255, 0.8);*/
+            border-radius: 8px;
+            width: 300px;
+            /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1)*/
+        }
+
+        .ver-button {
+            width: 200px;
+            height: 50px;
+            background: rgba(255, 255, 255, 50%);
+            font-size: 30px;
+            font-weight: bold;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+
+        }
+
+        .Verification {
+            display: flex;
+            /*grid-template-columns: 1fr;*/
+            justify-items: center; /* 水平居中 */
+            row-gap: 20px; /* 设置行间隙为100px */
+            height: 100px; /* 设置容器高度为视口高度，以便于垂直居中 */
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+
+
     </style>
 </head>
 
@@ -59,8 +113,65 @@
 
 
 <body>
-<h2>Admin Panel</h2>
-<!-- 管理员功能的HTML -->
+<div class="container">
+
+
+
+    <div class="Verification">
+        <h3>Create Verification Code</h3>
+        <form method="POST">
+            <input class="ver-code" type="text" name="code" placeholder="Verification Code" required>
+            <input class="start-time" type="datetime-local" name="start_at" placeholder="输入生效日期">
+            <input class="exp-time" type="datetime-local" name="expires_at" placeholder="输入失效日期">
+            <button class="ver-button" type="submit">激活验证码</button>
+        </form>
+    </div>
+
+    <div>
+        <h3>Manage Verification Codes</h3>
+        <ul>
+            {% for code in codes %}
+            <li style="color:
+                    {% if code.status() == 'pending' %}
+                        orange
+                    {% elif code.status() == 'active' %}
+                        green
+                    {% else %}
+                        red
+                    {% endif %}
+                    ;">
+                {{ code.code }} -
+                {% if code.start_at %}
+                Starts at: {{ code.start_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                {% endif %}
+                {% if code.expires_at %}
+                Expires at: {{ code.expires_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                {% else %}
+                No expiry
+                {% endif %}
+                <form action="{{ url_for('main.delete_code', code_id=code.id) }}" method="POST" style="display:inline;">
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div>
+        <h3>Manage Users</h3>
+        <ul>
+            {% for user in users %}
+            <li>
+                {{ user.username }}
+                <form action="{{ url_for('main.delete_user', user_id=user.id) }}" method="POST" style="display:inline;">
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</div>
 </body>
 
 

@@ -27,12 +27,49 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1)
         }
 
+        .send-button {
+            display: grid;
+            place-items: center;
+            width: 50%;
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .chat-box {
+            display: flex;
+            justify-content: center;
+            width: 50%;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        .button-position {
+            display: flex;
+            justify-content: center;
+            align-items: end;
+        }
+
+        /* .massages {
+            display: flex;
+            justify-content: center;
+            width: 1300px;
+            padding: 50px;
+            background: rgba(138, 138, 138, 0.35);
+            border-radius: 20px;
+        } */
+
         header { /*这里是表头设置区*/
             display: flex;
             justify-content: space-between;
             align-items: center;
             background-color: rgba(255, 255, 255, 0.5);
             padding: 10px;
+        }
 
             .left-section {
                 display: flex;
@@ -42,9 +79,9 @@
             .page-title {
                 font-size: 24px;
                 font-weight: bold;
-                background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+                /*background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);*/
                 -webkit-background-clip: text;
-                color: transparent;
+                color: black;
                 background-size: 200% auto;
             }
 
@@ -60,7 +97,6 @@
                 padding: 5px 10px;
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             }
-
 
 
     </style>
@@ -79,14 +115,19 @@
 <body>
 
 <div class="container">
-<!--    <h2 class="h2">Chat Room</h2>-->
+    <!--    <h2 class="h2">Chat Room</h2>-->
     <div id="messages">
         {% for message in messages %}
-        <p>{{ message.user.username }}: {{ message.content }}</p>
+            <p>{{ message.user.username }}: {{ message.content }}</p>
         {% endfor %}
     </div>
-    <input id="message" type="text">
-    <button onclick="sendMessage()">Send</button>
+
+    <input id="message" type="text" class="chat-box" placeholder="在此处输入聊天内容">
+
+    <div class="button-position">
+        <button class="send-button" onclick="sendMessage()">发 送</button>
+    </div>
+
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -94,10 +135,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         var socket = io.connect('http://' + document.domain + ':' + location.port);
 
-        socket.on('message', function (data) {
+        socket.on('message', function(data) {
             $('#messages').append('<p>' + data.user + ': ' + data.msg + '</p>');
         });
 
@@ -109,7 +150,7 @@
 
         window.sendMessage = sendMessage;
 
-        $('#message').keypress(function (event) {
+        $('#message').keypress(function(event) {
             if (event.which === 13) { // Enter key is pressed
                 sendMessage();
                 event.preventDefault(); // Prevent the default action of the Enter key
@@ -118,7 +159,7 @@
     });
 </script>
 
-<script>
+<!-- <script>
     const textElement = document.querySelector('.rainbow-text');
     let gradientPosition = 0;
 
@@ -128,8 +169,6 @@
     }
 
     setInterval(shiftGradient, 50);
-</script>
+</script> -->
 
 </body>
-
-</html>

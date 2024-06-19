@@ -8,7 +8,7 @@ from config import Config
 db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
-login_manager.login_view = 'login'
+login_manager.login_view = 'main.login'#从login变成了main.login
 socketio = SocketIO()
 
 def create_app():

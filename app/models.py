@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login_manager
@@ -24,6 +24,29 @@ class User(db.Model, UserMixin):
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+class VerificationCode(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    code = db.Column(db.String(20), unique=True, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    start_at = db.Column(db.DateTime, nullable=True)
+    expires_at = db.Column(db.DateTime, nullable=True)
+
+    def is_valid(self):
+        now = datetime.utcnow()
+        if self.start_at and now < self.start_at:
+            return False
+        if self.expires_at and now >= self.expires_at:
+            return False
+        return True
+
+    def status(self):
+        now = datetime.utcnow()
+        if self.start_at and now < self.start_at:
+            return "pending"
+        if self.expires_at and now >= self.expires_at:
+            return "expired"
+        return "active"
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
