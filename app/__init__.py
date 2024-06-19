@@ -9,7 +9,8 @@ db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
 login_manager.login_view = 'main.login'#从login变成了main.login
-socketio = SocketIO()
+# socketio = SocketIO()
+socketio = SocketIO(cors_allowed_origins="*")
 
 def create_app():
     app = Flask(__name__)
@@ -19,6 +20,7 @@ def create_app():
     migrate.init_app(app, db)
     login_manager.init_app(app)
     socketio.init_app(app)
+    # socketio.init_app(app, cors_allowed_origins="*")
 
     from .routes import main
     app.register_blueprint(main)

@@ -119,9 +119,23 @@ def logout():
     logout_user()
     return redirect(url_for('main.login'))
 
+# @socketio.on('message')
+# def handle_message(data):
+#     message = Message(user_id=current_user.id, content=data['msg'])
+#     db.session.add(message)
+#     db.session.commit()
+#     emit('message', {'user': current_user.username, 'msg': data['msg']}, broadcast=True)
+
+
 @socketio.on('message')
 def handle_message(data):
-    message = Message(user_id=current_user.id, content=data['msg'])
-    db.session.add(message)
-    db.session.commit()
-    emit('message', {'user': current_user.username, 'msg': data['msg']}, broadcast=True)
+    msg = data.get('msg', '').strip()
+    if msg:  # Ensure message is not empty
+        message = Message(user_id=current_user.id, content=msg)
+        db.session.add(message)
+        db.session.commit()
+        emit('message', {
+            'user': current_user.username,
+            'msg': msg,
+            'timestamp': message.date_posted.isoformat()
+        }, broadcast=True)
